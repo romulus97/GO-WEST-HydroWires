@@ -95,7 +95,7 @@ model.SD_periods = RangeSet(1,model.SimDays+1)
 model.HorizonHours = Param(within=PositiveIntegers)
 model.HH_periods = RangeSet(0,model.HorizonHours)
 model.hh_periods = RangeSet(1,model.HorizonHours)
-model.ramp_periods = RangeSet(2,24)
+model.ramp_periods = RangeSet(2,168)
 
 ######=================================================########
 ######               Segment B.6                       ########
@@ -207,8 +207,8 @@ model.MaxCap= Constraint(model.Dispatchable,model.hh_periods,rule=MaxC)
 
 #Max production constraints on domestic hydropower 
 def HydroP(model,j,i):
-    daily = sum(model.mwh[j,i] for i in model.hh_periods)
-    return  daily <= model.HorizonHydro_TOTAL[j]    
+    weekly = sum(model.mwh[j,i] for i in model.hh_periods)
+    return  weekly <= model.HorizonHydro_TOTAL[j]    
 model.HydroPROD= Constraint(model.Hydro,model.hh_periods,rule=HydroP)
 
 #Max capacity constraints on domestic hydropower 

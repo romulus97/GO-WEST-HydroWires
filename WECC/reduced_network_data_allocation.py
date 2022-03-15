@@ -521,20 +521,16 @@ for NN in NODE_NUMBER:
                     
                 
                 # create daily time series by node
-                H_min_hourly = np.zeros((365,len(buses)))
-                H_max_hourly = np.zeros((365,len(buses)))
-                H_mu_hourly = np.zeros((365,len(buses)))
+                H_min_hourly = np.zeros((52,len(buses)))
+                H_max_hourly = np.zeros((52,len(buses)))
+                H_mu_hourly = np.zeros((52,len(buses)))
                 
                 for i in range(0,len(H_min)):
                     for j in range(0,len(buses)):
-                        H_min_hourly[i*7:i*7+7,j] = H_min[i,j]
-                        H_max_hourly[i*7:i*7+7,j] = H_max[i,j]
-                        H_mu_hourly[i*7:i*7+7,j] = H_mu[i,j]*24
-                        
-                H_min_hourly[364,:] = H_min_hourly[363,:]
-                H_max_hourly[364,:] = H_max_hourly[363,:]
-                H_mu_hourly[364,:] = H_mu_hourly[363,:] 
-                
+                        H_min_hourly[i,j] = H_min[i,j]
+                        H_max_hourly[i,j] = H_max[i,j]
+                        H_mu_hourly[i,j] = H_mu[i,j]*168
+                          
                 h_buses = []
                 for i in range(0,len(buses)):
                     h_buses.append('bus_' + str(buses[i]))

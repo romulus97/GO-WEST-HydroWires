@@ -8,9 +8,9 @@ import numpy as np
 ######               Segment A.1                       ########
 ######=================================================########
 
-SimDays = 365
-SimHours = SimDays * 24
-HorizonHours = 24  ##planning horizon (e.g., 24, 48, 72 hours etc.)
+SimWeeks = 52
+SimHours = SimWeeks * 168
+HorizonHours = 168  ##planning horizon (e.g., 24, 48, 72 hours etc.)
 # TransLoss = 0.075  ##transmission loss as a percent of generation
 # n1criterion = 0.75 ##maximum line-usage as a percent of line-capacity
 # res_margin = 0.15  ##minimum reserve as a percent of system demand
@@ -218,7 +218,7 @@ with open(''+str(data_name)+'.dat', 'w') as f:
 ####### simulation period and horizon
     f.write('param SimHours := %d;' % SimHours)
     f.write('\n')
-    f.write('param SimDays:= %d;' % SimDays)
+    f.write('param SimWeeks:= %d;' % SimWeeks)
     f.write('\n\n')   
     f.write('param HorizonHours := %d;' % HorizonHours)
     f.write('\n\n')
@@ -285,7 +285,7 @@ with open(''+str(data_name)+'.dat', 'w') as f:
     # load (hourly)
     f.write('param:' + '\t' + 'SimDemand:=' + '\n')      
     for z in all_nodes:
-        for h in range(0,len(df_load)):
+        for h in range(0,SimHours):
             f.write(z + '\t' + str(h+1) + '\t' + str(df_load.loc[h,z]) + '\n')
     f.write(';\n\n')
     
@@ -295,7 +295,7 @@ with open(''+str(data_name)+'.dat', 'w') as f:
     f.write('param:' + '\t' + 'SimSolar:=' + '\n')
     s_gens = df_solar.columns
     for z in s_gens:
-        for h in range(0,len(df_solar)):
+        for h in range(0,SimHours):
             f.write(z + '_SOLAR' + '\t' + str(h+1) + '\t' + str(df_solar.loc[h,z]) + '\n')
     f.write(';\n\n')
     
@@ -304,13 +304,13 @@ with open(''+str(data_name)+'.dat', 'w') as f:
     f.write('param:' + '\t' + 'SimWind:=' + '\n')
     w_gens = df_wind.columns
     for z in w_gens:
-        for h in range(0,len(df_wind)):
+        for h in range(0,SimHours):
             f.write(z + '_WIND' + '\t' + str(h+1) + '\t' + str(df_wind.loc[h,z]) + '\n')
     f.write(';\n\n')
     
     print('wind')
     
-    # hydro (daily)
+    # hydro (weekly)
     f.write('param:' + '\t' + 'SimHydro_MAX:=' + '\n')
     h_gens = df_hydro_MAX.columns      
     for z in h_gens:
@@ -319,7 +319,7 @@ with open(''+str(data_name)+'.dat', 'w') as f:
             f.write(z + '_HYDRO' + '\t' + str(h+1) + '\t' + str(df_hydro_MAX.loc[h,z]) + '\n')
     f.write(';\n\n')
 
-    # hydro (daily)
+    # hydro (weekly)
     f.write('param:' + '\t' + 'SimHydro_MIN:=' + '\n')
     h_gens = df_hydro_MIN.columns      
     for z in h_gens:
@@ -328,7 +328,7 @@ with open(''+str(data_name)+'.dat', 'w') as f:
             f.write(z + '_HYDRO' + '\t' + str(h+1) + '\t' + str(df_hydro_MIN.loc[h,z]) + '\n')
     f.write(';\n\n')
     
-    # hydro (daily)
+    # hydro (weekly)
     f.write('param:' + '\t' + 'SimHydro_TOTAL:=' + '\n')
     h_gens = df_hydro_TOTAL.columns      
     for z in h_gens:
@@ -429,8 +429,7 @@ with open(''+str(data_name)+'.dat', 'w') as f:
 
     f.write('param:' + '\t' +'SimFuelPrice:=' + '\n')      
     for z in all_thermals:
-        for d in range(0,int(SimHours/24)): 
-            f.write(z + '\t' + str(d+1) + '\t' + str(df_fuel.loc[d,z]) + '\n')
+        f.write(z + '\t' + str(np.mean(df_fuel.loc[:,z])) + '\n')
     f.write(';\n\n')
     
     print('fuel prices')
