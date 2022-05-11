@@ -429,7 +429,8 @@ with open(''+str(data_name)+'.dat', 'w') as f:
 
     f.write('param:' + '\t' +'SimFuelPrice:=' + '\n')      
     for z in all_thermals:
-        f.write(z + '\t' + str(np.mean(df_fuel.loc[:,z])) + '\n')
+        for d in range(0,int(SimWeeks)): 
+            f.write(z + '\t' + str(d+1) + '\t' + str(df_fuel.loc[d*7,z]) + '\n')
     f.write(';\n\n')
     
     print('fuel prices')

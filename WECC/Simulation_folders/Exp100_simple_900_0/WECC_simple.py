@@ -129,7 +129,7 @@ model.HorizonWind = Param(model.Wind,model.hh_periods,within=NonNegativeReals,mu
 model.Must = Param(model.buses,within=NonNegativeReals)
 
 #Fuel prices over simulation period
-model.SimFuelPrice = Param(model.Thermal, within=NonNegativeReals)
+model.SimFuelPrice = Param(model.Thermal,model.SD_periods, within=NonNegativeReals)
 model.FuelPrice = Param(model.Thermal,within = NonNegativeReals, mutable=True)
 
 ######=================================================########

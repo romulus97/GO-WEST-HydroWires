@@ -17,7 +17,7 @@ from datetime import datetime
 import pyomo.environ as pyo
 from pyomo.environ import value
 
-weeks = 3 # Max = 52
+weeks = 52 # Max = 52
 
 instance = m1.create_instance('WECC_data.dat')
 instance.dual = pyo.Suffix(direction=pyo.Suffix.IMPORT)
@@ -61,17 +61,17 @@ for week in range(1,weeks+1):
             instance.HorizonDemand[z,i] = instance.SimDemand[z,(week-1)*168+i]
 
             # instance.HorizonReserves[i] = instance.SimReserves[(day-1)*24+i]
+       
+    for z in instance.Solar:
+    #load Solar time series data
+        for i in K:
+            instance.HorizonSolar[z,i] = instance.SimSolar[z,(week-1)*168+i]
 
     for z in instance.Hydro:
     #load Hydropower time series data
         instance.HorizonHydro_MAX[z] = instance.SimHydro_MAX[z,week]
         instance.HorizonHydro_MIN[z] = instance.SimHydro_MIN[z,week]
         instance.HorizonHydro_TOTAL[z] = instance.SimHydro_TOTAL[z,week]
-        
-    for z in instance.Solar:
-    #load Solar time series data
-        for i in K:
-            instance.HorizonSolar[z,i] = instance.SimSolar[z,(week-1)*168+i]
 
     for z in instance.Wind:
     #load Wind time series data
@@ -80,7 +80,7 @@ for week in range(1,weeks+1):
             
     for z in instance.Thermal:
     #load fuel prices for thermal generators
-        instance.FuelPrice[z] = instance.SimFuelPrice[z]
+        instance.FuelPrice[z] = instance.SimFuelPrice[z,week]
 
     result = opt.solve(instance,tee=True,symbolic_solver_labels=True, load_solutions=False) ##,tee=True to check number of variables\n",
     instance.solutions.load_from(result)  

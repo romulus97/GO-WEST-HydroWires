@@ -88,8 +88,8 @@ model.ExchangeMap=Param(model.exchanges,model.lines, mutable=True)
 ## Full range of time series information
 model.SimHours = Param(within=PositiveIntegers)
 model.SH_periods = RangeSet(1,model.SimHours+1)
-model.SimDays = Param(within=PositiveIntegers)
-model.SD_periods = RangeSet(1,model.SimDays+1)
+model.SimWeeks = Param(within=PositiveIntegers)
+model.SD_periods = RangeSet(1,model.SimWeeks+1)
 
 # Operating horizon information 
 model.HorizonHours = Param(within=PositiveIntegers)
